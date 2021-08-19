@@ -36,7 +36,7 @@ class IDMHelper:
         #if you installed idm to another drive, just change the folder path
         x64 = 'C:\Program Files (x86)\Internet Download Manager' #64 bit
         x86 = 'C:\Program Files\Internet Download Manager'       #32 bit
-        if not isdir(x64) or isdir(x86):
+        if not isdir(x64) or not isdir(x86):
             raise NotADirectoryError("IDM is not found. Please install first")
         try:
              # Registry path: Computer\HKEY_CLASSES_ROOT\TypeLib\{ECF21EAB-3AA8-4355-82BE-F777990001DD}
