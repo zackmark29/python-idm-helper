@@ -12,3 +12,6 @@ IDMHelper(url, outputFolderPath, outputFileName, flag, userAgent=customUserAgent
 ```
 
 API REFERENCE: http://www.internetdownloadmanager.com/support/idm_api.html
+
+Ps. I just made this idm helper for my python tools. Because my internet connection is so slow when using built in downloader or aria2c. 
+Hope this will be helpful to you also :)
