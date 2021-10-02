@@ -1,7 +1,7 @@
 # python-idm-helper
 Use IDM Api in python.
 
-# EXAMPLE USAGE
+# EXAMPLE
 ```python
 
 url = 'http://www.internetdownloadmanager.com/idman401.exe'
