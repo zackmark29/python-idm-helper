@@ -1,18 +1,14 @@
-from genericpath import isdir
-import os
-from os.path import join
-from pathlib import Path
+from pathlib import Path, PurePath
 from comtypes import client
 from comtypes.automation import VT_EMPTY
 
-def dirExist(dir): return Path(dir).exists()
 
 class IDMHelper:
     def __init__(self,
-                 url,  outputFolderPath,  outputFileName, flag,
+                 url,  output_folder,  output_filename, flag,
                  #OPTIONALS
-                 referer=None, cookies=None, postData=None,
-                 userName=None, password=None, userAgent=None
+                 referer = None, cookies = None, post_data = None,
+                 user_name = None, password = None, user_agent = None
                  ):
         ''' 
         flags
@@ -22,58 +18,67 @@ class IDMHelper:
             3: Add only to queue without any confirmation
         '''
         #optionals
-        self.referer    = referer
-        self.cookies    = cookies
-        self.postData   = postData
-        self.userName   = userName
-        self.password   = password
-        self.userAgent  = userAgent
+        self.referer = referer
+        self.cookies = cookies
+        self.post_data = post_data
+        self.userName = user_name
+        self.password = password
+        self.user_agent = user_agent
         
         self.url = url
         self.flag = flag
-        self.outputFolderPath = outputFolderPath
-        self.outputFileName = outputFileName
+        self.output_folder = output_folder
+        self.output_filename = output_filename
                     
-        #if you installed idm to another drive, just change the folder path
-        #since most of the system is 64bit and the default dir for 64bit is this
-        idmPath = 'C:\Program Files (x86)\Internet Download Manager'
-        if not dirExist(idmPath):
-            idmPath = 'C:\Program Files\Internet Download Manager'
-            if not dirExist(idmPath): #idm is not installed
-                raise NotADirectoryError(idmPath)
+        def check_folder(*dirs):
+            for dir in dirs:
+                if Path(dir).exists():
+                    return dir
+            raise NotADirectoryError("Looks like you don't have IDM installed in your system")
+
+        # if you installed idm to another drive, just change the folder path
+        
+        idm_folder_64bit = 'C:\Program Files (x86)\Internet Download Manager'
+        idm_folder_32bit = 'C:\Program Files\Internet Download Manager'
+
+        idm_folder = check_folder(idm_folder_64bit, idm_folder_32bit)
+
         try:
-             # Registry path: Computer\HKEY_CLASSES_ROOT\TypeLib\{ECF21EAB-3AA8-4355-82BE-F777990001DD}
+            # Registry path: Computer\HKEY_CLASSES_ROOT\TypeLib\{ECF21EAB-3AA8-4355-82BE-F777990001DD}
             UUID = '{ECF21EAB-3AA8-4355-82BE-F777990001DD}'
             self.IDMan = client.GetModule([UUID, 1, 0])
-        except:
-            #if uuid is not exist in the registry
-            tlb = join(idmPath, 'idmantypeinfo.tlb')
+        except OSError:
+            # if uuid is not exist in the registry
+            tlb = PurePath(idm_folder, 'idmantypeinfo.tlb')
             if not Path(tlb).is_file():
-                raise FileNotFoundError(f'{tlb} is not exist')
+                raise FileNotFoundError(f'{tlb} is not exist. Try to re-install your idm')
                 
             self.IDMan = client.GetModule(tlb)
             
-    def sendToIDM(self):
+    def send_to_IDM(self):
+
         client.CreateObject(
-            progid='IDMan.CIDMLinkTransmitter', 
-            interface=self.IDMan.ICIDMLinkTransmitter2).SendLinkToIDM2(
-                self.url, 
-                self.referer, 
-                self.cookies, 
-                self.postData, 
-                self.userName, 
-                self.password, 
-                self.outputFolderPath, 
-                self.outputFileName, 
-                self.flag,
-                self.userAgent if self.userAgent else VT_EMPTY,
-                VT_EMPTY
-            )
+            progid = 'IDMan.CIDMLinkTransmitter', 
+            interface = self.IDMan.ICIDMLinkTransmitter2
+        ).SendLinkToIDM2(
+            self.url, 
+            self.referer, 
+            self.cookies, 
+            self.post_data, 
+            self.userName, 
+            self.password, 
+            self.output_folder, 
+            self.output_filename, 
+            self.flag,
+            self.user_agent if self.user_agent else VT_EMPTY,
+            VT_EMPTY
+        )
 
 if __name__ == '__main__':
     url = 'http://www.internetdownloadmanager.com/idman401.exe'
-    outputFolderPath = os.getcwd()
-    outputFileName = 'idman.exe'
-    customUserAgent = None
+    import os
+    output_folder = os.getcwd()
+    output_filename = 'idman.exe'
+    user_agent = None
     flag = 3 #see above the flag information
-    IDMHelper(url, outputFolderPath, outputFileName, flag, userAgent=customUserAgent).sendToIDM()
+    IDMHelper(url, output_folder, output_filename, flag, user_agent=user_agent).send_to_IDM()
