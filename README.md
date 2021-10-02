@@ -4,12 +4,13 @@ Use IDM Api in python.
 # EXAMPLE
 ```python
 
+import os
 url = 'http://www.internetdownloadmanager.com/idman401.exe'
-outputFolderPath = os.getcwd()
-outputFileName = 'idman.exe'
-customUserAgent = None
+output_folder = os.getcwd()
+output_filename = 'idman.exe'
+user_agent = None
 flag = 3 #see above the flag information
-IDMHelper(url, outputFolderPath, outputFileName, flag, userAgent=customUserAgent).sendToIDM()
+IDMHelper(url, output_folder, output_filename, flag, user_agent=user_agent).send_to_IDM()
 
 ```
 API REFERENCE: http://www.internetdownloadmanager.com/support/idm_api.html
