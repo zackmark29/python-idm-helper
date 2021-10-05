@@ -2,13 +2,17 @@ from pathlib import Path, PurePath
 from comtypes import client
 from comtypes.automation import VT_EMPTY
 
+'''
+Python IDM Helper by zackmark29
+Version v1.1_2021.10.26
+'''
 
 class IDMHelper:
     def __init__(self,
-                 url,  output_folder,  output_filename, flag,
+                 url, output_folder, output_filename, flag,
                  #OPTIONALS
-                 referer = None, cookies = None, post_data = None,
-                 user_name = None, password = None, user_agent = None
+                 referer=None, cookies=None, post_data=None,
+                 user_name=None, password=None, user_agent=None
                  ):
         ''' 
         flags
@@ -17,7 +21,13 @@ class IDMHelper:
             2: Display confirmation if found duplicate and add only to queue
             3: Add only to queue without any confirmation
         '''
-        #optionals
+        # common
+        self.url = url
+        self.flag = flag
+        self.output_folder = output_folder
+        self.output_filename = output_filename
+                    
+        # optionals
         self.referer = referer
         self.cookies = cookies
         self.post_data = post_data
@@ -25,11 +35,6 @@ class IDMHelper:
         self.password = password
         self.user_agent = user_agent
         
-        self.url = url
-        self.flag = flag
-        self.output_folder = output_folder
-        self.output_filename = output_filename
-                    
         def check_folder(*dirs):
             for dir in dirs:
                 if Path(dir).exists():
@@ -55,23 +60,23 @@ class IDMHelper:
                 
             self.IDMan = client.GetModule(tlb)
             
-    def send_to_IDM(self):
-
-        client.CreateObject(
-            progid = 'IDMan.CIDMLinkTransmitter', 
+    def send_to_IDM(self) -> None:
+        idm = client.CreateObject(
+            progid = 'IDMan.CIDMLinkTransmitter',
             interface = self.IDMan.ICIDMLinkTransmitter2
-        ).SendLinkToIDM2(
-            self.url, 
-            self.referer, 
-            self.cookies, 
-            self.post_data, 
-            self.userName, 
-            self.password, 
-            self.output_folder, 
-            self.output_filename, 
-            self.flag,
-            self.user_agent if self.user_agent else VT_EMPTY,
-            VT_EMPTY
+        )
+        idm.SendLinkToIDM2(
+            bstrUrl = self.url, 
+            bstrReferer = self.referer, 
+            bstrCookies = self.cookies, 
+            bstrData = self.post_data, 
+            bstrUser = self.userName, 
+            bstrPassword = self.password, 
+            bstrLocalPath = self.output_folder, 
+            bstrLocalFileName = self.output_filename, 
+            lFlags = self.flag,
+            reserved1 = self.user_agent if self.user_agent is not None else VT_EMPTY,
+            reserved2 = VT_EMPTY
         )
 
 if __name__ == '__main__':
