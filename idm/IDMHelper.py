@@ -20,17 +20,19 @@ class IDMHelper:
             interface=self._idm_module.ICIDMLinkTransmitter2
         )
 
-    def send_link_to_idm(self, url: str,
-                         output_folder: str,
-                         output_file_name: str,
-                         flag: int,
-                         referer: Optional[str] = None,
-                         cookies: Optional[str] = None,
-                         post_data: Optional[str] = None,
-                         user_name: Optional[str] = None,
-                         password: Optional[str] = None,
-                         user_agent: Optional[str] = None
-                         ) -> None:
+    def send_link_to_idm(
+            self,
+            url: str,
+            output_folder: str,
+            output_file_name: str,
+            flag: int,
+            referer: Optional[str] = None,
+            cookies: Optional[str] = None,
+            post_data: Optional[str] = None,
+            user_name: Optional[str] = None,
+            password: Optional[str] = None,
+            user_agent: Optional[str] = None
+    ) -> None:
         """
         Send link to idm
 
