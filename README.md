@@ -1,4 +1,4 @@
-# python-idm-helper
+# Python IDM Helper
 **Python IDM Helper** will let you send any link inside python directly to IDM.
 
 You can use this to automate your tool if you want better download speed with IDM.
@@ -6,15 +6,16 @@ You can use this to automate your tool if you want better download speed with ID
 ---
 ## **EXAMPLE USAGE**:
 ```python
-url = 'http://www.internetdownloadmanager.com/idman401.exe'
+from pathlib import Path
 
+from idm import IDMHelper
+
+url = 'https://www.internetdownloadmanager.com/idman401.exe'
 output_folder = Path.cwd()
 output_filename = 'idman.exe'
-user_agent = None
-flag = 3    # see above the flag information
-idm = IDMHelper(url, str(output_folder), output_filename, flag)
-idm.send_link_to_idm()      # for simple method with limited parameters
-# idm.send_link_to_idm2()   # with all parameters
+flag = 3
+idm = IDMHelper()
+idm.send_link_to_idm(url, str(output_folder), output_filename, flag)
 ```
 ---
 
