@@ -3,26 +3,29 @@ Python IDM Helper by zackmark29
 Version v1.0.2 | 2021.11.28
 '''
 
-from typing import Optional
 from pathlib import Path
+from typing import Optional
+
 from comtypes import client
-from module import get_module
 from comtypes.automation import VT_EMPTY
+
+from module import get_module
 
 
 class IDMHelper:
-    '''
+    """
     flags
         0: Display/Pop-up confirmation before downloading
         1: Download automatically without any confirmations dialogs
         2: Display confirmation if found duplicate and add only to queue
         3: Add only to queue without any confirmation
-    '''
+    """
+
     def __init__(self,
                  url: str,
                  output_folder: str,
                  output_file_name: str,
-                 flag: str,
+                 flag: int,
                  referer: Optional[str] = None,
                  cookies: Optional[str] = None,
                  post_data: Optional[str] = None,
@@ -93,7 +96,7 @@ if __name__ == '__main__':
     output_folder = Path.cwd()
     output_filename = 'idman.exe'
     user_agent = None
-    flag = 3    # see above the flag information
+    flag = 3  # see above the flag information
     idm = IDMHelper(url, str(output_folder), output_filename, flag)
     idm.send_link_to_idm()
     # idm.send_link_to_idm2()
