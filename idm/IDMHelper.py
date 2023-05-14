@@ -9,7 +9,7 @@ from typing import Optional
 from comtypes import client
 from comtypes.automation import VT_EMPTY
 
-from module import get_module
+from .module import get_module
 
 
 class IDMHelper:
